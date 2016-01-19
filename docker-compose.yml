@@ -1,0 +1,11 @@
+nginx:
+  image: finch-melrose/nginx
+  links:
+   - etcd
+
+etcd:
+  image: quay.io/coreos/etcd
+  command: --listen-client-urls 'http://0.0.0.0:2379,http://0.0.0.0:4001' --advertise-client-urls 'http://localhost:2379,http://localhost:4001' --initial-cluster-state new --name etcd
+  ports:
+   - 4001:4001
+   - 7001:7001

@@ -1,0 +1,1 @@
+confd: ./confd.sh
