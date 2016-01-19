@@ -27,9 +27,7 @@ RUN mkdir -p /app/confd-env/conf.d
 RUN wget -qO- https://releases.hashicorp.com/consul-template/0.12.2/consul-template_0.12.2_linux_amd64.zip | gunzip > /usr/local/bin/consul-template
 RUN chmod +x /usr/local/bin/consul-template
 
-COPY Procfile confd.sh init.sh /app/
-COPY ./confd/ /app/confd/
-COPY ./confd-env/ /app/confd-env/
+COPY Procfile confd.sh init.sh nginx-reload.sh /app/
 COPY ./consul-template/ /app/consul-template/
 RUN chmod +x /app/*.sh
 

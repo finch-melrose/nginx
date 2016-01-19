@@ -1,3 +1,0 @@
-[template]
-src = "nginx.tmpl"
-dest = "/app/confd/conf.d/nginx.toml"
