@@ -1,0 +1,12 @@
+info:
+  build:
+    artifact: @project.artifactId@
+    version: @project.version@
+
+spring:
+  application:
+    name: @project.artifactId@
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${spring.cloud.consul.discovery.hostname}
