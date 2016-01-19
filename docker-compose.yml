@@ -1,5 +1,5 @@
 nginx:
-  image: finch-melrose/nginx
+  image: finchcloud/nginx
   links:
    - consul
   ports:
@@ -15,6 +15,6 @@ consul:
    - 8600:53/udp
 
 service:
-  image: finch-melrose/nginx-dev-service
+  image: finchcloud/nginx-dev-service
   links:
    - consul

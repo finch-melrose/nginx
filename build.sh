@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-docker build -t finch-melrose/nginx .
+docker build -t finchcloud/nginx .

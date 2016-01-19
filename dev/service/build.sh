@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 mvn install
-docker build -t finch-melrose/nginx-dev-service .
+docker build -t finchcloud/nginx-dev-service .
