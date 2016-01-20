@@ -17,25 +17,26 @@ RUN echo "daemon off;error_log stderr;" >> /etc/nginx/nginx.conf \
 RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego \
  && chmod u+x /usr/local/bin/forego
 
-# Install confd
-RUN wget -O /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64
-RUN chmod +x /usr/local/bin/confd
-RUN mkdir -p /app/confd/conf.d
-RUN mkdir -p /app/confd-env/conf.d
-
 # Install consul-template
 RUN wget -qO- https://releases.hashicorp.com/consul-template/0.12.2/consul-template_0.12.2_linux_amd64.zip | gunzip > /usr/local/bin/consul-template
 RUN chmod +x /usr/local/bin/consul-template
 
-COPY Procfile confd.sh init.sh nginx-reload.sh /app/
+COPY ./letsencrypt/install_simp_le.sh /app/letsencrypt/
+RUN chmod +rx /app/letsencrypt/install_simp_le.sh && sync && /app/letsencrypt/install_simp_le.sh && rm -f /app/letsencrypt/install_simp_le.sh
+
+COPY Procfile init.sh nginx-reload.sh /app/
 COPY ./consul-template/ /app/consul-template/
+COPY ./letsencrypt/ /app/letsencrypt/
 RUN chmod +x /app/*.sh
+RUN chmod +x /app/letsencrypt/letsencrypt.sh
 
 ENV CONFIG_PREFIX=/app
+ENV HOSTING_DOMAIN cloud
+ENV HOSTING_PASSWORD 'finch:$apr1$iahxouEq$iXcpso4HhXGzuE9lusgKH/'
 
 WORKDIR /app/
 ENTRYPOINT ["/app/init.sh"]
-CMD ["forego", "start"]
+CMD ["forego", "start", "-r"]
 #consul-template \
     #  -consul ${NGINX_CONSUL_1_PORT_8500_TCP_ADDR}:${NGINX_CONSUL_1_PORT_8500_TCP_PORT} \
     #  -template "/app/consul-template/nginx.ctmpl:/etc/nginx/conf.d/default.conf:service nginx restart || true"

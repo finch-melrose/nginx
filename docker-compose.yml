@@ -9,10 +9,6 @@ consul:
   image: progrium/consul
   command: -server -bootstrap -ui-dir /ui
   hostname: consul-node-1
-  ports:
-   - 8400:8400
-   - 8500:8500
-   - 8600:53/udp
 
 service:
   image: finchcloud/nginx-dev-service

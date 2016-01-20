@@ -2,4 +2,4 @@
 set -e
 
 ./build.sh
-cd dev/service && ./build.sh && cd -
+cd dev/finchcloud-nginx-dev-service && ./build.sh && cd -

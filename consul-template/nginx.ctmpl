@@ -1,22 +1,58 @@
-{{range services}}
-upstream {{.Name}} {
-    least_conn;
-    {{range service .Name "passing"}}
-    server {{.Address}}:{{.Port}} max_fails=3 fail_timeout=60 weight=1;
-    {{end}}
+upstream consul {
+  least_conn;
+  {{ range service "consul" }}server {{ .Address }}:8500 max_fails=3 fail_timeout=20 weight={{if eq .Status "passing"}}1{{else}}0{{end}};
+  {{ end }}
+}
+
+{{ range services }}
+upstream service-{{ .Name }} {
+  least_conn;
+  {{ range service .Name }}server {{ .Address }}:{{ .Port }} max_fails=3 fail_timeout=20 weight={{if eq .Status "passing"}}1{{else}}0{{end}};
+  {{ end }}
 }
 {{end}}
 
-{{range services}}
+{{ range services }}
 server {
-    listen       80;
-    server_name  "{{.Name}}.*";
+  listen       80;
+  server_name  "{{ .Name }}.service.{{ env "HOSTING_DOMAIN" }}";
 
-    location / {
-        proxy_pass http://{{.Name}};
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
+  location / {
+    proxy_pass              http://service-{{ .Name }};
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        Host $host;
+    proxy_set_header        X-Real-IP $remote_addr;
+    auth_basic              "closed site";
+    auth_basic_user_file    /etc/nginx/pass;
+  }
+}
+{{ end }}
+
+server {
+  listen       80;
+  server_name  "consul.{{ env "HOSTING_DOMAIN" }}";
+
+  location / {
+    proxy_pass              http://consul;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        Host $host;
+    proxy_set_header        X-Real-IP $remote_addr;
+    auth_basic              "closed site";
+    auth_basic_user_file    /etc/nginx/pass;
+  }
+}
+
+{{ range ls "finchcloud/nginx/domains" }}
+server {
+    #todo if {{ .Value }} valid
+  listen       80;
+  server_name  "{{ .Key }}";
+
+  location / {
+    proxy_pass              http://service-{{ .Value }};
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        Host $host;
+    proxy_set_header        X-Real-IP $remote_addr;
+  }
 }
 {{end}}

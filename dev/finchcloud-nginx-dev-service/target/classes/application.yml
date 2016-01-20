@@ -1,0 +1,12 @@
+info:
+  build:
+    artifact: finchcloud-nginx-dev-service
+    version: 1.0-SNAPSHOT
+
+spring:
+  application:
+    name: finchcloud-nginx-dev-service
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${spring.cloud.consul.discovery.hostname}

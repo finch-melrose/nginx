@@ -2,11 +2,10 @@
 set -e
 
 l=0
-for j in `cat /etc/nginx/conf.d/default.conf`
-do
-    echo "$l: $j"
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    echo "$l: $line"
     l=$((l+1))
-done
+done < "/etc/nginx/conf.d/default.conf"
 
 nginx -t -c /etc/nginx/nginx.conf
 nginx -s reload
