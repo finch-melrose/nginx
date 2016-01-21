@@ -44,7 +44,7 @@ server {
 
 {{ range ls "finchcloud/nginx/domains" }}
 server {
-    #todo if {{ .Value }} valid
+  #todo if {{ .Value }} valid
   listen       80;
   server_name  "{{ .Key }}";
 

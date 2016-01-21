@@ -6,3 +6,9 @@ template {
   destination = "/etc/nginx/conf.d/default.conf"
   command = "/app/nginx-reload.sh || true"
 }
+
+template {
+  source = "/app/consul-template/letsencrypt_data.ctmpl"
+  destination = "/app/letsencrypt/letsencrypt_data"
+  command = "/app/letsencrypt/letsencrypt.sh || true"
+}

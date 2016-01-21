@@ -37,7 +37,3 @@ ENV HOSTING_PASSWORD 'finch:$apr1$iahxouEq$iXcpso4HhXGzuE9lusgKH/'
 WORKDIR /app/
 ENTRYPOINT ["/app/init.sh"]
 CMD ["forego", "start", "-r"]
-#consul-template \
-    #  -consul ${NGINX_CONSUL_1_PORT_8500_TCP_ADDR}:${NGINX_CONSUL_1_PORT_8500_TCP_PORT} \
-    #  -template "/app/consul-template/nginx.ctmpl:/etc/nginx/conf.d/default.conf:service nginx restart || true"
-#["forego", "start", "-r"]
